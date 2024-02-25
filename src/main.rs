@@ -1,4 +1,5 @@
 #![no_std] // Disable standard library as it depends on underlying operating system
+#![no_main] // Remove main function as it needs an underlying runtime
 
 use core::panic::PanicInfo;
 
@@ -9,4 +10,8 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-fn main() {}
+// Operating system entry point
+#[no_mangle] // Disable name mangling so start function is not renamed on compilation
+pub extern "C" fn _start() -> ! {
+    loop {}
+}
