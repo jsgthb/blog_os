@@ -110,7 +110,17 @@ impl Writer {
         self.column_position = 0;
     }
 
-    fn clear_row(&mut self, row: usize) {/* TODO */}
+    fn clear_row(&mut self, row: usize) {
+        // Blank screen character
+        let blank = ScreenChar {
+            ascii_character: b' ',
+            color_code: self.color_code,
+        };
+        // Replace characters in row with blank character
+        for col in 0..BUFFER_WIDTH {
+            self.buffer.chars[row][col].write(blank);
+        }
+    }
 
     pub fn write_string(&mut self, s: &str) {
         for byte in s.bytes() {
