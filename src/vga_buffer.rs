@@ -1,5 +1,7 @@
 use volatile::Volatile;
 use core::fmt;
+use lazy_static::lazy_static;
+use spin::Mutex;
 
 // Reference: https://en.wikipedia.org/wiki/VGA_text_mode
 // Enum representing all possible colours
@@ -146,4 +148,15 @@ pub fn print_something() {
     writer.write_string("ello World");
     writer.write_string("\nAnother line");
     write!(writer, "The magic number is {}", 42).unwrap();
+}
+
+// Use lazy static macro to initialize when accessed for the first time
+lazy_static! {
+    // Global writer interface for other modules
+    // Use spinning mutex to add mutability to static writer
+    pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Green, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer)}
+    });
 }
