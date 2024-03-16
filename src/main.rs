@@ -15,7 +15,9 @@ mod vga_buffer;
 // Operating system entry point
 #[no_mangle] // Disable name mangling so start function is not renamed on compilation
 pub extern "C" fn _start() -> ! {
-    vga_buffer::print_something();
+    use core::fmt::Write;
+    vga_buffer::WRITER.lock().write_str("This is a test").unwrap();
+    write!(vga_buffer::WRITER.lock(), "The magic number is {}", 42).unwrap();
     
     loop {}
 }
