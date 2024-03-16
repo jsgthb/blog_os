@@ -56,3 +56,34 @@ pub struct Writer {
     color_code: ColorCode,
     buffer: &'static mut Buffer,
 }
+
+impl Writer {
+    pub fn write_byte(&mut self, byte: u8) {
+        match byte {
+            // Go to newline if newline character is detected
+            b'\n' => self.new_line(),
+            byte => {
+                // Go to newline if newline if current position is or exceeds buffer width
+                if self.column_position >= BUFFER_WIDTH {
+                    self.new_line()
+                }
+                
+                // Get current position
+                let row = BUFFER_HEIGHT - 1;
+                let col = self.column_position;
+                
+                // Set buffer matrix to character
+                let color_code = self.color_code;
+                self.buffer.chars[row][col] = ScreenChar {
+                    ascii_character: byte,
+                    color_code,
+                };
+
+                // Increment column position
+                self.column_position += 1;
+            }
+        }
+    }
+    
+    fn new_line(&mut self) {/* TODO */}
+}
