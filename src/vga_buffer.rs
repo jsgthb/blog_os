@@ -1,4 +1,5 @@
 use volatile::Volatile;
+use core::fmt;
 
 // Reference: https://en.wikipedia.org/wiki/VGA_text_mode
 // Enum representing all possible colours
@@ -59,6 +60,14 @@ pub struct Writer {
     buffer: &'static mut Buffer,
 }
 
+// Write formatting macro
+impl fmt::Write for Writer {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        self.write_string(s);
+        Ok(())
+    }
+}
+
 impl Writer {
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
@@ -102,6 +111,7 @@ impl Writer {
 }
 
 pub fn print_something() {
+    use core::fmt::Write;
     let mut writer = Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Green, Color::Black),
@@ -111,4 +121,5 @@ pub fn print_something() {
     writer.write_byte(b'H');
     writer.write_string("ello World");
     writer.write_string("\nAnother line");
+    write!(writer, "The magic number is {}", 42).unwrap();
 }
