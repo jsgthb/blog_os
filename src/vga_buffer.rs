@@ -96,7 +96,21 @@ impl Writer {
         }
     }
 
-    fn new_line(&mut self) {/* TODO */}
+    fn new_line(&mut self) {
+        // Start at 1 because 0th row is shifted off screen
+        for row in 1..BUFFER_HEIGHT {
+            for col in 0..BUFFER_WIDTH {
+                // Move each character 1 row up
+                let character = self.buffer.chars[row][col].read();
+                self.buffer.chars[row -1][col].write(character);
+            }
+        }
+        // Clear bottom row
+        self.clear_row(BUFFER_HEIGHT - 1);
+        self.column_position = 0;
+    }
+
+    fn clear_row(&mut self, row: usize) {/* TODO */}
 
     pub fn write_string(&mut self, s: &str) {
         for byte in s.bytes() {
