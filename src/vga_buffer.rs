@@ -1,3 +1,5 @@
+use volatile::Volatile;
+
 // Reference: https://en.wikipedia.org/wiki/VGA_text_mode
 // Enum representing all possible colours
 #[allow(dead_code)]
@@ -47,7 +49,7 @@ const BUFFER_WIDTH: usize = 80;
 
 #[repr(transparent)]
 struct Buffer {
-    chars: [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT],
+    chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
 // Writer struct
@@ -74,10 +76,10 @@ impl Writer {
                 
                 // Set buffer matrix to character
                 let color_code = self.color_code;
-                self.buffer.chars[row][col] = ScreenChar {
+                self.buffer.chars[row][col].write(ScreenChar {
                     ascii_character: byte,
                     color_code,
-                };
+                });
 
                 // Increment column position
                 self.column_position += 1;
