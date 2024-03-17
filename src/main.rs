@@ -2,8 +2,10 @@
 #![no_main] // Remove main function as it needs an underlying runtime
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
+#![reexport_test_harness_main = "test_main"]
 
 use core::panic::PanicInfo;
+mod vga_buffer;
 
 // Function is called on panic
 // Required as panic handler is typically defined in standard libary
@@ -13,12 +15,14 @@ fn panic(info: &PanicInfo) -> ! {
     loop {}
 }
 
-mod vga_buffer;
-
 // Operating system entry point
 #[no_mangle] // Disable name mangling so start function is not renamed on compilation
 pub extern "C" fn _start() -> ! {
-    println!("This is test number {}", 42);
+    println!("Custom kernel has started");
+
+    #[cfg(test)] // Only call test_main function on test compilation
+    test_main();
+
     loop {}
 }
 
