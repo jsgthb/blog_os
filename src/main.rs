@@ -40,10 +40,10 @@ pub extern "C" fn _start() -> ! {
 
 // Custom test framework
 #[cfg(test)]
-pub fn test_runner(tests: &[&dyn Fn()]) {
+pub fn test_runner(tests: &[&dyn Testable]) {
     serial_println!("Running {} tests", tests.len());
     for test in tests {
-        test();
+        test.run();
     }
     exit_qemu(QemuExitCode::Success);
 }
@@ -51,9 +51,7 @@ pub fn test_runner(tests: &[&dyn Fn()]) {
 // Example test case
 #[test_case]
 fn trivial_assertion() {
-    serial_print!("Trivial assertion...");
     assert_eq!(1, 1);
-    serial_println!("[ok]")
 }
 
 // Qemu exit function for testing framework
