@@ -6,6 +6,7 @@
 
 use core::panic::PanicInfo;
 mod vga_buffer;
+mod serial;
 
 // Function is called on panic
 // Required as panic handler is typically defined in standard libary
