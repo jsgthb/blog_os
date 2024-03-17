@@ -136,20 +136,6 @@ impl Writer {
     }
 }
 
-pub fn print_something() {
-    use core::fmt::Write;
-    let mut writer = Writer {
-        column_position: 0,
-        color_code: ColorCode::new(Color::Green, Color::Black),
-        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-    };
-
-    writer.write_byte(b'H');
-    writer.write_string("ello World");
-    writer.write_string("\nAnother line");
-    write!(writer, "The magic number is {}", 42).unwrap();
-}
-
 // Use lazy static macro to initialize when accessed for the first time
 lazy_static! {
     // Global writer interface for other modules
