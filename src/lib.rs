@@ -8,6 +8,7 @@
 pub mod serial;
 pub mod vga_buffer;
 pub mod interrupts;
+pub mod gdt;
 
 use core::panic::PanicInfo;
 
@@ -78,6 +79,8 @@ pub fn exit_qemu(exit_code: QemuExitCode) {
 
 // Initialization routines
 pub fn init() {
+    // Global descriptor table
+    gdt::init();
     // CPU interrupt descriptor table
     interrupts::init_idt();
 }
