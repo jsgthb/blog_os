@@ -27,8 +27,14 @@ fn panic(info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     println!("Custom kernel has started");
 
+    blog_os::init();
+
+    // Breakpoint test
+    x86_64::instructions::interrupts::int3();
+
     #[cfg(test)]
     test_main();
 
+    println!("Kernel is still working");
     loop {}
 }
